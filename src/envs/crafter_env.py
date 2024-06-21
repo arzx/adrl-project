@@ -1,5 +1,4 @@
 import argparse
-
 import crafter
 import stable_baselines3
 from gym.wrappers.monitoring.video_recorder import VideoRecorder
