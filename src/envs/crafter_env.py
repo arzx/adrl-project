@@ -8,8 +8,13 @@ parser.add_argument('--outdir', default='logdir/crafter_reward-ppo/0')
 parser.add_argument('--steps', type=float, default=1e6)
 args = parser.parse_args()
 
-env = crafter.Env()
-
+def create_env():
+    """
+    Create and return the Crafter environment.
+    """
+    env = crafter.Env()
+    return env
+env = create_env()
 model = stable_baselines3.PPO('CnnPolicy', env, verbose=1)
 env = crafter.Recorder(
     env, args.outdir,

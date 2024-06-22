@@ -1,0 +1,8 @@
+# How to run the baselines
+python src/agents/baselines.py --steps 10000
+# src error
+export PYTHONPATH=$(pwd)/src:$PYTHONPATH to run
+# What do the plots mean
+# What to do to extend this
+# ----- TODO ----- #
+# increase steps for training
