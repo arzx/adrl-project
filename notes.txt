@@ -6,3 +6,4 @@ export PYTHONPATH=$(pwd)/src:$PYTHONPATH to run
 # What to do to extend this
 # ----- TODO ----- #
 # increase steps for training
+# seeds

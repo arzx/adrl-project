@@ -3,12 +3,25 @@ from stable_baselines3 import PPO
 from src.envs.crafter_env import create_env
 from src.utils.logging import LossLoggingCallback
 import matplotlib.pyplot as plt
+import numpy as np
+import random
+import torch
+
+def set_seed(seed):
+    """
+    Set the seed for reproducibility.
+    """
+    np.random.seed(seed)
+    random.seed(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
 
 def train_ppo_agent(env, steps):
     """
     Train a PPO agent on the given environment for a specified number of steps.
     """
-    callback = LossLoggingCallback(verbose=1)
+    callback = LossLoggingCallback(total_timesteps=steps, verbose=1)
     model = PPO('CnnPolicy', env, verbose=1)
     model.learn(total_timesteps=steps, callback=callback)
     return model, callback.get_losses(), callback.get_rewards()
@@ -26,7 +39,7 @@ def render_env(env, model, steps):
             obs = env.reset()
     env.close()
 
-def plot_losses(losses):
+def plot_losses(losses, seed):
     """
     Plot the average loss over training steps.
     """
@@ -38,13 +51,12 @@ def plot_losses(losses):
     plt.plot(losses)
     plt.xlabel('Training Steps')
     plt.ylabel('Loss')
-    plt.title('Average Loss during PPO Training')
+    plt.title(f'Average Loss during PPO Training (Seed: {seed})')
     plt.grid(True)
-    # Set y-axis limits based on the range of loss values
     plt.ylim(min(losses) * 0.9, max(losses) * 1.1)
     plt.show()
 
-def plot_rewards(rewards):
+def plot_rewards(rewards, seed):
     if not rewards:
         print("No rewards to plot.")
         return
@@ -53,7 +65,7 @@ def plot_rewards(rewards):
     plt.plot(rewards)
     plt.xlabel('Training Steps')
     plt.ylabel('Reward')
-    plt.title('Average Rewards during PPO Training')
+    plt.title(f'Average Rewards during PPO Training (Seed: {seed})')
     plt.grid(True)
     plt.show()
 
@@ -63,18 +75,24 @@ def main():
     parser.add_argument('--steps', type=float, default=1e6)
     args = parser.parse_args()
 
-    # Create the environment
-    env = create_env()
+    seeds = [42, 123, 456, 789, 101112]  # List of seeds
 
-    # Train the PPO agent
-    model, losses, rewards = train_ppo_agent(env, args.steps)
+    for seed in seeds:
+        print(f"\nRunning training with seed: {seed}")
+        set_seed(seed)
 
-    # Render the environment after training
-    render_env(env, model, args.steps)
+        # Create the environment
+        env = create_env()
 
-    # Plot the losses and rewards
-    plot_losses(losses)
-    plot_rewards(rewards)
+        # Train the PPO agent
+        model, losses, rewards = train_ppo_agent(env, args.steps)
+
+        # Render the environment after training
+        render_env(env, model, args.steps)
+
+        # Plot the losses and rewards
+        plot_losses(losses, seed)
+        plot_rewards(rewards, seed)
 
 if __name__ == "__main__":
     main()
