@@ -1,0 +1,2 @@
+Used LLM:
+ChatGPT-4o for debugging and general project structuring
