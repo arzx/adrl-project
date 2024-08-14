@@ -53,8 +53,8 @@ def train_ppo_agent(env, steps):
             break  # Stop if we've collected enough steps
 
     #all_info = [dict((k, v.tolist() if isinstance(v, np.ndarray) else v) for k, v in i.items()) for i in all_info]
-    #with open(f"logdir/crafter_reward-ppo/0/scores.json", "w") as file:
-    #    json.dump(scores, file, indent=4)
+    with open(f"logdir/crafter_reward-ppo/0/scores.json", "w") as file:
+        json.dump(scores, file, indent=4)
     print("------ check if states work --------")
     return model, callback.get_losses(), callback.get_rewards(), scores
 
