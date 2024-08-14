@@ -18,7 +18,7 @@ env = create_env()
 model = stable_baselines3.PPO('CnnPolicy', env, verbose=1)
 env = crafter.Recorder(
     env, args.outdir,
-    save_stats=False,
+    save_stats=True,
     save_episode=False,
     save_video=True,
 )
