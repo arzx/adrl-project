@@ -7,3 +7,8 @@ export PYTHONPATH=$(pwd)/src:$PYTHONPATH to run
 # ----- TODO ----- #
 # increase steps for training
 # seeds
+
+
+# cluster vs eigener project
+# cluster
+Training Progress: 2048step [00:18, 108.86step/s] 

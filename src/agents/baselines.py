@@ -55,7 +55,6 @@ def train_ppo_agent(env, steps):
     #all_info = [dict((k, v.tolist() if isinstance(v, np.ndarray) else v) for k, v in i.items()) for i in all_info]
     with open(f"logdir/crafter_reward-ppo/0/scores.json", "w") as file:
         json.dump(scores, file, indent=4)
-    print("------ check if states work --------")
     return model, callback.get_losses(), callback.get_rewards(), scores
 
 def render_env(env, model, steps):
@@ -106,7 +105,8 @@ def plot_rewards(rewards, seed):
     plt.ylabel('Reward')
     plt.title(f'Average Rewards during PPO Training (Seed: {seed})')
     plt.grid(True)
-    plt.show()
+    #plt.show()
+    plt.savefig(f'src/plots/rewards_seed_{seed}.png')
 
 def plot_scores(scores, seed):
     if not scores:
