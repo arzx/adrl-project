@@ -1,9 +1,10 @@
-#!/bin/bash -l
-#SBATCH --job-name=test_serial
-#SBATCH --ntasks=1
-#SBATCH --mem-per-cpu=2G
-#SBATCH --time=00:20:00
-#SBATCH --partition=ai
+#!/bin/bash
+
+#SBATCH --job-name=test_gpu
+#SBATCH --partition=ai,tnt
+#SBATCH --gres=gpu:a100:1
+#SBATCH --mem-per-cpu=10M
+#SBATCH --time=00:5:00
 #SBATCH --mail-user=artur.ganzha@stud.uni-hannover.de
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --output=test_serial-job_%j.out
@@ -13,7 +14,8 @@
 cd /bigwork/nhwpgana/adrl-project
 
 # Load the correct Python module
-module spider python  # Check for available versions
+module load GCC/10.3.0
+module load CMake/3.20.1
 module load python/3.12.4  # Load the correct Python version
 
 # If conda is installed and available
