@@ -10,7 +10,7 @@
 #SBATCH --error=test_serial-job_%j.err
 
 # Change to the directory from which the job was submitted
-cd $SLURM_SUBMIT_DIR
+cd /bigwork/nhwpgana/adrl-project
 
 # Load the necessary module
 module load python/3.12.4
