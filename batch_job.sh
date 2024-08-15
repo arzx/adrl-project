@@ -21,4 +21,4 @@ export PATH=/path/to/conda/bin:$PATH  # Add Conda to the PATH if needed
 source activate adrl-project-luis || conda activate adrl-project-luis  # Activate your conda environment
 
 # Run the Python script
-python baselines.py
+python src/agents/baselines.py --steps 100
