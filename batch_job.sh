@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --job-name=test_gpu
-#SBATCH --partition=ai,tnt
+#SBATCH --partition=ai
 #SBATCH --gres=gpu:a100:1
 #SBATCH --mem-per-cpu=10M
 #SBATCH --time=00:5:00
