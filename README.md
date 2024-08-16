@@ -3,3 +3,5 @@ This project combines the concept of curiosity as intrinsic rewards in the craft
 
 
 ICM from: https://github.com/Stepan-Makarenko/ICM-PPO-implementation/blob/master/ICM.py
+
+[1] Makarenko, S. (2024). ICM-PPO-implementation [Computer software]. GitHub. https://github.com/Stepan-Makarenko/ICM-PPO-implementation

@@ -133,7 +133,7 @@ def main():
         print(f"\nRunning training with seed: {seed}")
         set_seed(seed)
 
-        # Create the environment
+        # Create the environment with crafter
         env = create_env()
 
         # Train the PPO agent

@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 from curiousity import ICM
 from ActorCritic import ActorCritic
-from utils import Swish, linear_decay_beta, linear_decay_lr, linear_decay_eps
+from utils.utils import Swish, linear_decay_beta, linear_decay_lr, linear_decay_eps
 
 
 class ICMPPO:
@@ -45,7 +45,7 @@ class ICMPPO:
         self.MseLoss = nn.MSELoss(reduction='none')
 
     def update(self, memory, timestep):
-        # Convert lists from memory to tensors
+    # Convert lists from memory to tensors
         self.timestep = timestep
         old_states = torch.stack(memory.states).to(self.device).detach()
         old_states = torch.transpose(old_states, 0, 1)
@@ -56,10 +56,26 @@ class ICMPPO:
         curr_states = old_states[:, :-1, :]
         next_states = old_states[:, 1:, :]
         actions = old_actions[:, :-1].long()
-        rewards = torch.tensor(memory.rewards[:-1]).T.to(self.device).detach()
-        mask = (~torch.tensor(memory.is_terminals).T.to(self.device).detach()[:, :-1]).type(torch.long)
+
+        # Convert rewards and is_terminals to tensors
+        rewards_array = np.array(memory.rewards[:-1])
+        rewards = torch.tensor(rewards_array).T.to(self.device).detach()
+
+        is_terminals_array = np.array(memory.is_terminals)
+
+        # Use the correct method to transpose and slice the mask tensor
+        is_terminals_tensor = torch.tensor(is_terminals_array).to(self.device).detach()
+        if is_terminals_tensor.ndim > 1:
+            mask = (~is_terminals_tensor.permute(1, 0)[:, :-1]).type(torch.long)
+        else:
+            # If the tensor is 1D, no need to transpose, just slice
+            mask = (~is_terminals_tensor[:-1]).type(torch.long)
+
+    # Compute intrinsic rewards with no gradient computation
         with torch.no_grad():
             intr_reward, _, _ = self.icm(actions, curr_states, next_states, mask)
+
+        # Clamp intrinsic rewards
         intr_rewards = torch.clamp(self.intr_reward_strength * intr_reward, 0, 1)
 
         self.writer.add_scalar('Mean_intr_reward_per_1000_steps',
