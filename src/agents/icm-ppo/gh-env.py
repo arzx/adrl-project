@@ -34,6 +34,7 @@ agent = ICMPPO(writer=None, device=device)
 
 timestep = 0
 T = np.zeros(16)
+sum_rewards = 0
 state = crafter.reset()
 # training loop
 for i_episode in range(1, max_episodes + 1):
@@ -44,6 +45,7 @@ for i_episode in range(1, max_episodes + 1):
         T += 1
         # Running policy_old:
         actions = agent.policy_old.act(np.array(state), memory)
+        #print(f"actions: {actions.shape}")
         if isinstance(actions, (list, np.ndarray)):
             actions = actions[0]
         state, rewards, dones, info = crafter.step(int(actions))
@@ -51,6 +53,7 @@ for i_episode in range(1, max_episodes + 1):
         # Fix rewards
         dones = np.array(dones)
         rewards = np.array(rewards)
+        #print(rewards)
         if rewards.size == 1:
             rewards = np.full_like(T, rewards)
         rewards += 2 * (rewards == 0) * (T < 1000)
@@ -59,9 +62,10 @@ for i_episode in range(1, max_episodes + 1):
         # Saving reward and is_terminal:
         memory.rewards.append(rewards)
         memory.is_terminals.append(dones)
-
         # update if its time
         if timestep % update_timestep == 0:
+            #print(f"memory: {len(memory.actions)}")
+            #print(f"timestep {timestep}")
             agent.update(memory, timestep)
             memory.clear_memory()
 

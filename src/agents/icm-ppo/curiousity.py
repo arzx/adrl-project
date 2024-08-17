@@ -33,6 +33,7 @@ class ICM(nn.Module):
     def forward(self, act, curr_obs, next_obs, mask):
         # Inverse model
         curr_enc = self.encoder(curr_obs)
+        #print(f"curr_enc: {curr_enc}")
         next_enc = self.encoder(next_obs)
         out = self.fc_i1(torch.cat((curr_enc, next_enc), dim=2))
         out = self.act_i1(out)

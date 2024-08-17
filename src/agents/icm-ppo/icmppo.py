@@ -4,6 +4,7 @@ import torch.nn as nn
 from curiousity import ICM
 from ActorCritic import ActorCritic
 from utils.utils import Swish, linear_decay_beta, linear_decay_lr, linear_decay_eps
+import torch.nn.functional as F
 
 
 class ICMPPO:
@@ -56,7 +57,8 @@ class ICMPPO:
         curr_states = old_states[:, :-1, :]
         next_states = old_states[:, 1:, :]
         actions = old_actions[:, :-1].long()
-
+        curr_states = F.adaptive_avg_pool2d(curr_states, (2047, 172))  # Now shape: [64, 2047, 172]
+        next_states = F.adaptive_avg_pool2d(next_states, (2047, 172))
         # Convert rewards and is_terminals to tensors
         rewards_array = np.array(memory.rewards[:-1])
         rewards = torch.tensor(rewards_array).T.to(self.device).detach()
@@ -73,33 +75,24 @@ class ICMPPO:
 
     # Compute intrinsic rewards with no gradient computation
         with torch.no_grad():
+            #actions = actions.unsqueeze()  # Now actions shape: [64, 2047, 1]
+            actions = actions.squeeze(-1)  # Now actions shape: [64, 2047]
             intr_reward, _, _ = self.icm(actions, curr_states, next_states, mask)
-
-        # Clamp intrinsic rewards
         intr_rewards = torch.clamp(self.intr_reward_strength * intr_reward, 0, 1)
 
-        self.writer.add_scalar('Mean_intr_reward_per_1000_steps',
-                               intr_rewards.mean() * 1000,
-                               self.timestep
-                               )
-
-        # Finding comulitive advantage
         with torch.no_grad():
-            state_values = torch.squeeze(self.policy.value_layer(curr_states))
-            next_state_values = torch.squeeze(self.policy.value_layer(next_states))
+            state_values = torch.squeeze(self.policy.value_layer(curr_states), dim=-1)
+            next_state_values = torch.squeeze(self.policy.value_layer(next_states), dim=-1)
+            #state_values = self.policy.value_layer(curr_states)
+            #next_state_values = self.policy.value_layer(next_states)
+            rewards = rewards.repeat(4, 1) # Expanding to match batch size [64, 2047]
+            mask = mask.repeat(64, 1)
+            print(f"next_state_values: {next_state_values.shape}")
+            print(f"mask: {mask.shape}")
             td_target = (rewards + intr_rewards) / 2 + self.gamma * next_state_values * mask
             delta = td_target - state_values
 
-            self.writer.add_scalar('maxValue',
-                                   state_values.max(),
-                                   timestep
-                                   )
-            self.writer.add_scalar('meanValue',
-                                   state_values.mean(),
-                                   self.timestep
-                                   )
-
-            advantage = torch.zeros(1, 16).to(self.device)
+            advantage = torch.zeros(1, 64).to(self.device)
             advantage_lst = []
             for i in range(delta.size(1) - 1, -1, -1):
                 delta_t, mask_t = delta[:, i], mask[:, i]
@@ -116,7 +109,7 @@ class ICMPPO:
         epoch_surr_loss = 0
         for _ in range(self.ppo_epochs):
             indexes = np.random.permutation(actions.size(1))
-            # Train PPO and icm
+            # Train PPO and ICM
             for i in range(0, len(indexes), self.ppo_batch_size):
                 batch_ind = indexes[i:i + self.ppo_batch_size]
                 batch_curr_states = curr_states[:, batch_ind, :]
@@ -126,14 +119,21 @@ class ICMPPO:
                 batch_local_advantages = local_advantages[:, batch_ind]
                 batch_old_logprobs = old_logprobs[:, batch_ind]
 
-                # Finding actions logprobs and states values
-                batch_logprobs, batch_state_values, batch_dist_entropy = self.policy.evaluate(batch_curr_states,
-                                                                                              batch_actions)
+                # Evaluate policy on the current batch
+                batch_logprobs, batch_state_values, batch_dist_entropy = self.policy.evaluate(batch_curr_states, batch_actions)
+
+                # Now reshape batch_old_logprobs to match the dimensions of batch_logprobs if necessary
+                if batch_old_logprobs.size() != batch_logprobs.size():
+                    batch_old_logprobs = batch_old_logprobs.view(batch_logprobs.size(0), -1)
+
+                # Ensure batch_logprobs has the correct shape by expanding it if necessary
+                if batch_logprobs.dim() < batch_old_logprobs.dim():
+                    batch_logprobs = batch_logprobs.unsqueeze(-1).expand_as(batch_old_logprobs)
 
                 # Finding the ratio (pi_theta / pi_theta__old):
                 ratios = torch.exp(batch_logprobs - batch_old_logprobs.detach())
 
-                # Apply leaner decay and multiply 16 times cause agents_batch is 16 long
+                # Apply linear decay and multiply 16 times because agents_batch is 16 long
                 decay_epsilon = linear_decay_eps(self.timestep * 16)
                 decay_beta = linear_decay_beta(self.timestep * 16)
 
@@ -141,9 +141,8 @@ class ICMPPO:
                 surr1 = ratios * batch_advantages
                 surr2 = torch.clamp(ratios, 1 - decay_epsilon, 1 + decay_epsilon) * batch_advantages
                 loss = -torch.min(surr1, surr2) * batch_mask + \
-                       0.5 * nn.MSELoss(reduction='none')(batch_state_values,
-                                                           batch_local_advantages.detach()) * batch_mask - \
-                       decay_beta * batch_dist_entropy * batch_mask
+                    0.5 * nn.MSELoss(reduction='none')(batch_state_values, batch_local_advantages.detach()) * batch_mask - \
+                    decay_beta * batch_dist_entropy * batch_mask
                 loss = loss.mean()
 
                 self.optimizer.zero_grad()
