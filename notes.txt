@@ -9,9 +9,8 @@ export PYTHONPATH=$(pwd)/src:$PYTHONPATH to run
 # seeds
 
 
-# cluster vs eigener project
-# cluster
-Training Progress: 2048step [00:18, 108.86step/s] 
+# cluster 
+rm test_serial-job_*.err test_serial-job_*.out # delete error logs
 
 # ppo rnd
 python src/agents/reinforcement_learning_ppo_rnd/PPO_RND/pytorch/ppo_rnd_pytorch.py
