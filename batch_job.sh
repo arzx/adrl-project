@@ -1,8 +1,7 @@
 #!/bin/bash -l
 #SBATCH --job-name=adrl-baselines
 #SBATCH --gres=gpu:a100:2  # Request 2 A100 GPUs
-#SBATCH --mem=64G  # Request 64GB of memory (adjust as needed)
-#SBATCH --ntasks=1
+#SBATCH --mem=64G #64 gb
 #SBATCH --cpus-per-task=8  # Adjust the number of CPUs per task if needed
 #SBATCH --time=08:00:00  # Adjust time based on expected runtime
 #SBATCH --partition=ai  # Partition for AI workloads
