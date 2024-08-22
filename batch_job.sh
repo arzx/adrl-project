@@ -17,7 +17,7 @@
 module load Miniconda3
 
 source /home/nhwpgana/.bashrc
-conda activate /bigwork/nhwpgana/.conda/envs/adrl_project
+conda activate /bigwork/nhwpgana/.conda/envs/adrl-project-luis
 export WANDB_MODE=offline
 
 
