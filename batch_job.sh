@@ -1,6 +1,6 @@
 #!/bin/bash -l
 #SBATCH --job-name=adrl-baselines
-#SBATCH --gres=gpu:a80:1
+#SBATCH --gres=gpu:a100:1
 #SBATCH --mem-per-cpu=10M
 #SBATCH --ntasks=1
 #SBATCH --time=00:20:00
