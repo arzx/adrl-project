@@ -1,6 +1,6 @@
 #!/bin/bash -l
 #SBATCH --job-name=adrl-baselines
-#SBATCH --partition=ai  # Partition for AI workloads
+#SBATCH --partition=ai-n001  # Partition for AI workloads
 #SBATCH --gres=gpu:a100:2
 #SBATCH --mem-per-cpu=10M
 #SBATCH --time=08:00:00  # Adjust time based on expected runtime
