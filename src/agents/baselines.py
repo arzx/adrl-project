@@ -1,12 +1,14 @@
 import argparse
-from stable_baselines3 import PPO
-from src.envs.crafter_env import create_env
-from src.utils.logging import LossLoggingCallback
+import json
+import random
+
 import matplotlib.pyplot as plt
 import numpy as np
-import random
 import torch
-import json
+from src.envs.crafter_env import create_env
+from src.utils.logging import LossLoggingCallback
+from stable_baselines3 import PPO
+
 
 def set_seed(seed):
     """
@@ -39,6 +41,7 @@ def train_ppo_agent(env, steps):
             action, _states = model.predict(obs, deterministic=False)
             obs, reward, done, info = env.step(action)
             all_info.append(info)
+            print(action.shape)
             cumulative_score += reward
             #print(cumulative_score)
 
@@ -48,7 +51,7 @@ def train_ppo_agent(env, steps):
                 print(len(scores))
                 cumulative_score = 0  # Reset score after each episode
                 obs = env.reset()
-
+        #print(f"obs: {obs}")
         if len(scores) >= steps:
             break  # Stop if we've collected enough steps
 

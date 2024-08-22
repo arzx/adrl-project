@@ -12,3 +12,9 @@ export PYTHONPATH=$(pwd)/src:$PYTHONPATH to run
 # cluster vs eigener project
 # cluster
 Training Progress: 2048step [00:18, 108.86step/s] 
+
+# ppo rnd
+python src/agents/reinforcement_learning_ppo_rnd/PPO_RND/pytorch/ppo_rnd_pytorch.py
+
+# ppo 
+python src/agents/baselines.py --steps 1  
