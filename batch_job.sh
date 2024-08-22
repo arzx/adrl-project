@@ -22,4 +22,4 @@ export WANDB_MODE=offline
 
 
 # Run the Python script
-python bigwork/adrl-project/src/agents/baselines.py --steps 1000000
+python bigwork/nhwpgana/adrl-project/src/agents/baselines.py --steps 1000000
