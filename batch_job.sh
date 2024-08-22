@@ -20,6 +20,7 @@ module load Miniconda3
 source /home/nhwpgana/.bashrc
 conda activate /bigwork/nhwpgana/.conda/envs/adrl-project-luis
 export WANDB_MODE=offline
+export PYTHONPATH=$(pwd)/src:$PYTHONPATH
 
 
 # Run the Python script
