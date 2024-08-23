@@ -1,3 +1,2 @@
 ssh nhwpgana@login.cluster.uni-hannover.de
 Xaa535V2
-All done! You won't have to do this again on this cluster, simply re-open your shell and use the command 'make-project' to make repos from now on.
