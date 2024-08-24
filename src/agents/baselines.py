@@ -1,7 +1,7 @@
 import argparse
 import json
 import random
-
+import os
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
@@ -20,7 +20,7 @@ def set_seed(seed):
     if torch.cuda.is_available():
         torch.cuda.manual_seed_all(seed)
 
-def train_ppo_agent(env, steps):
+def train_ppo_agent(env, steps, seed):
     """
     Train a PPO agent on the given environment for a specified number of steps.
     """
@@ -28,9 +28,9 @@ def train_ppo_agent(env, steps):
     model = PPO('CnnPolicy', env, verbose=1)
     
     scores = []
-    all_info = []
     obs = env.reset()
     cumulative_score = 0
+    episodes = 0
 
     while True:
         model.learn(total_timesteps=steps, callback=callback)  # Train the model for the given number of steps
@@ -40,24 +40,41 @@ def train_ppo_agent(env, steps):
         while not done:
             action, _states = model.predict(obs, deterministic=False)
             obs, reward, done, info = env.step(action)
-            all_info.append(info)
-            print(action.shape)
             cumulative_score += reward
-            #print(cumulative_score)
 
             if done:
                 scores.append(cumulative_score)
                 print(scores)
-                print(len(scores))
                 cumulative_score = 0  # Reset score after each episode
                 obs = env.reset()
-        #print(f"obs: {obs}")
-        if len(scores) >= steps:
-            break  # Stop if we've collected enough steps
+                episodes += 1
 
-    #all_info = [dict((k, v.tolist() if isinstance(v, np.ndarray) else v) for k, v in i.items()) for i in all_info]
-    with open(f"logdir/crafter_reward-ppo/0/scores.json", "w") as file:
-        json.dump(scores, file, indent=4)
+        if episodes >= steps:
+            break  # Stop if we've completed enough episodes
+
+    # Ensure the directory exists
+    os.makedirs("logdir/crafter_reward-ppo/0", exist_ok=True)
+
+    # Load existing scores from the JSON file, if it exists
+    file_path = "logdir/crafter_reward-ppo/0/scores.json"
+    if os.path.exists(file_path):
+        with open(file_path, "r") as file:
+            try:
+                existing_data = json.load(file)
+                if not isinstance(existing_data, dict):
+                    existing_data = {}
+            except json.JSONDecodeError:
+                existing_data = {}
+    else:
+        existing_data = {}
+
+    # Add the new scores under the current seed
+    existing_data[f"seed_{seed}"] = scores
+
+    # Save the updated scores to the JSON file
+    with open(file_path, "w") as file:
+        json.dump(existing_data, file, indent=4)
+
     return model, callback.get_losses(), callback.get_rewards(), scores
 
 def render_env(env, model, steps):
@@ -71,12 +88,10 @@ def render_env(env, model, steps):
         obs, reward, done, info = env.step(action)
         
         cumulative_score += reward
-        print(_states)
         env.render()
         if done:
             print(f"Episode Score: {cumulative_score}")
             cumulative_score = 0
-            #print(f"achievements: {env.achievements}")
             obs = env.reset()
     env.close()
 
@@ -95,33 +110,33 @@ def plot_losses(losses, seed):
     plt.title(f'Average Loss during PPO Training (Seed: {seed})')
     plt.grid(True)
     plt.ylim(min(losses) * 0.9, max(losses) * 1.1)
-    plt.show()
+    plt.savefig(f'src/plots/baselines/losses_baselines_{seed}.png')
 
 def plot_rewards(rewards, seed):
     if not rewards:
         print("No rewards to plot.")
         return
-    #plt.xscale("log")
+
     plt.figure(figsize=(10, 5))
     plt.plot(rewards)
     plt.xlabel('Training Steps')
     plt.ylabel('Reward')
     plt.title(f'Average Rewards during PPO Training (Seed: {seed})')
     plt.grid(True)
-    #plt.show()
-    plt.savefig(f'src/plots/rewards_seed_{seed}.png')
+    plt.savefig(f'src/plots/baselines/rewards_baselines_{seed}.png')
 
 def plot_scores(scores, seed):
     if not scores:
         print("No scores to plot.")
         return
+
     plt.figure(figsize=(10, 5))
     plt.plot(scores)
     plt.xlabel('Episodes')
     plt.ylabel('Score')
     plt.title(f'Scores during PPO Training (Seed: {seed})')
     plt.grid(True)
-    plt.show()
+    plt.savefig(f'src/plots/baselines/baselines_{seed}.png')
 
 
 def main():
@@ -130,7 +145,7 @@ def main():
     parser.add_argument('--steps', type=float, default=1e6)
     args = parser.parse_args()
 
-    seeds = [42]  # List of seeds
+    seeds = [42, 111, 101]  # List of seeds
 
     for seed in seeds:
         print(f"\nRunning training with seed: {seed}")
@@ -140,7 +155,7 @@ def main():
         env = create_env()
 
         # Train the PPO agent
-        model, losses, rewards, scores = train_ppo_agent(env, args.steps)
+        model, losses, rewards, scores = train_ppo_agent(env, args.steps, seed)
 
         # Render the environment after training
         render_env(env, model, args.steps)

@@ -1,0 +1,49 @@
+{
+    "os": "macOS-14.5-arm64-arm-64bit",
+    "python": "3.12.5",
+    "heartbeatAt": "2024-08-24T10:47:34.016788",
+    "startedAt": "2024-08-24T10:47:33.083446",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "/Users/arturganzha/adrl-project/src/craftax_ppo/craftax_baselines.py",
+    "codePathLocal": "src/craftax_ppo/craftax_baselines.py",
+    "codePath": "src/craftax_ppo/craftax_baselines.py",
+    "git": {
+        "remote": "https://github.com/arzx/adrl-project.git",
+        "commit": "75b62d29b6d3cad390ad57f847195a3c37363491"
+    },
+    "email": "arturganzha10@gmail.com\\n",
+    "root": "/Users/arturganzha/adrl-project",
+    "host": "ip137.236.mip.uni-hannover.de",
+    "username": "arturganzha",
+    "executable": "/Users/arturganzha/adrl-project/.venv/bin/python",
+    "cpu_count": 11,
+    "cpu_count_logical": 11,
+    "cpu_freq": {
+        "current": 4056,
+        "min": 696,
+        "max": 4056
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 4056,
+            "min": 696,
+            "max": 4056
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 460.4317207336426,
+            "used": 12.421119689941406
+        }
+    },
+    "gpuapple": {
+        "type": "Apple M3 Pro",
+        "vendor": "sppci_vendor_Apple"
+    },
+    "memory": {
+        "total": 18.0
+    }
+}
