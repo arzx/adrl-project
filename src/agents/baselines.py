@@ -54,7 +54,7 @@ def train_ppo_agent(env, steps, seed):
 
     # Ensure the directory exists
     os.makedirs("logdir/crafter_reward-ppo/0", exist_ok=True)
-
+    print(f"episodes: {episodes}")
     # Load existing scores from the JSON file, if it exists
     file_path = "logdir/crafter_reward-ppo/0/scores.json"
     if os.path.exists(file_path):
