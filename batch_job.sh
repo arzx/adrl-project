@@ -24,4 +24,4 @@ export PYTHONPATH=$(pwd)/src:$PYTHONPATH
 
 
 # Run the Python script
-python /bigwork/nhwpgana/adrl-project/src/agents/baselines.py --steps 1000000
+python /bigwork/nhwpgana/adrl-project/src/agents/baselines.py
