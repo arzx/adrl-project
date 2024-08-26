@@ -94,7 +94,7 @@ def render_env(env, model, steps):
             cumulative_score = 0
             obs = env.reset()
     env.close()
-
+# delete plotting 
 def plot_losses(losses, seed):
     """
     Plot the average loss over training steps.
