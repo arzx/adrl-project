@@ -1,0 +1,6 @@
+- nn in models umbennenn
+- ppo_rnd scores in logdir speichern
+- ppo_rnd seeds einbauen
+- ppo_rnd auf cluster laufen lassen
+- von cluster ergebnisse auf gh pushen
+- README fertig machen

@@ -11,8 +11,7 @@ import warnings
 
 import matplotlib.pyplot as plt
 import numpy as np
-import sys
-import numpy
+
 warnings.filterwarnings("ignore", category=UserWarning, message="resource_tracker: There appear to be .* leaked semaphore objects")
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")  
 dataType = torch.cuda.FloatTensor if torch.cuda.is_available() else torch.FloatTensor
