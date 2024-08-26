@@ -145,7 +145,7 @@ def main():
     parser.add_argument('--steps', type=float, default=1e6)
     args = parser.parse_args()
 
-    seeds = [42, 111, 101]  # List of seeds
+    seeds = [42, 111, 101, 292, 300]  # List of seeds
 
     for seed in seeds:
         print(f"\nRunning training with seed: {seed}")
@@ -161,9 +161,9 @@ def main():
         render_env(env, model, args.steps)
 
         # Plot the losses, rewards, and scores
-        plot_losses(losses, seed)
-        plot_rewards(rewards, seed)
-        plot_scores(scores, seed)
+        #plot_losses(losses, seed)
+        #plot_rewards(rewards, seed)
+        #plot_scores(scores, seed)
 
 if __name__ == "__main__":
     main()
