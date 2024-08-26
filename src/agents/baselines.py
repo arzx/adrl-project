@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import torch
 from src.envs.crafter_env import create_env
-from src.utils.logging import LossLoggingCallback
+from src.utils.custom_logging import LossLoggingCallback
 from stable_baselines3 import PPO
 
 
@@ -69,7 +69,7 @@ def train_ppo_agent(env, steps, seed):
         existing_data = {}
 
     # Add the new scores under the current seed
-    existing_data[f"seed_{seed}"] = scores
+    existing_data[f"{seed}"] = scores
 
     # Save the updated scores to the JSON file
     with open(file_path, "w") as file:
