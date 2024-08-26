@@ -22,6 +22,6 @@ conda activate /bigwork/nhwpgana/.conda/envs/adrl-project-luis
 export WANDB_MODE=offline
 export PYTHONPATH=$(pwd)/src:$PYTHONPATH
 
-
+# 1000 steps work
 # Run the Python script
 python /bigwork/nhwpgana/adrl-project/src/agents/baselines.py --steps 1000
