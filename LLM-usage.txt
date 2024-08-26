@@ -1,2 +1,3 @@
 Used LLM:
-ChatGPT-4o for debugging and general project structuring
+ChatGPT-4o for debugging and general project 
+Help with plotting and json loading

@@ -1,9 +1,11 @@
 import gym
 from gym.envs.registration import register
 from envs.crafter_env import create_env
-from nn.Actor_Model import Actor_Model
-from nn.Critic_Model import Critic_Model
-from nn.RND_Model import RND_Model
+from models.Actor_Model import Actor_Model
+from models.Critic_Model import Critic_Model
+from models.RND_Model import RND_Model
+from memory import Memory
+from obs_memory import ObsMemory
 import torch
 from torch.distributions import Categorical
 from torch.distributions.kl import kl_divergence
@@ -17,68 +19,6 @@ import numpy as np
 warnings.filterwarnings("ignore", category=UserWarning, message="resource_tracker: There appear to be .* leaked semaphore objects")
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")  
 dataType = torch.cuda.FloatTensor if torch.cuda.is_available() else torch.FloatTensor
-
-class ObsMemory(Dataset):
-    def __init__(self, state_dim):
-        self.observations    = []
-
-        self.mean_obs           = torch.zeros(state_dim).to(device)
-        self.std_obs            = torch.zeros(state_dim).to(device)
-        self.std_in_rewards     = torch.zeros(1).to(device)
-        self.total_number_obs   = torch.zeros(1).to(device)
-        self.total_number_rwd   = torch.zeros(1).to(device)
-
-    def __len__(self):
-        return len(self.observations)
-
-    def __getitem__(self, idx):
-        return np.array(self.observations[idx], dtype = np.float32)
-
-    def get_all(self):
-        return torch.FloatTensor(self.observations)
-
-    def save_eps(self, obs):
-        self.observations.append(obs)
-
-    def save_observation_normalize_parameter(self, mean_obs, std_obs, total_number_obs):
-        self.mean_obs           = mean_obs
-        self.std_obs            = std_obs
-        self.total_number_obs   = total_number_obs
-        
-    def save_rewards_normalize_parameter(self, std_in_rewards, total_number_rwd):
-        self.std_in_rewards     = std_in_rewards
-        self.total_number_rwd   = total_number_rwd
-
-    def clear_memory(self):
-        del self.observations[:]
-
-class Memory(Dataset):
-    def __init__(self):
-        self.actions        = [] 
-        self.states         = []
-        self.rewards        = []
-        self.dones          = []     
-        self.next_states    = []
-
-    def __len__(self):
-        return len(self.dones)
-
-    def __getitem__(self, idx):
-        return np.array(self.states[idx], dtype = np.float32), np.array(self.actions[idx], dtype = np.float32), np.array([self.rewards[idx]], dtype = np.float32), np.array([self.dones[idx]], dtype = np.float32), np.array(self.next_states[idx], dtype = np.float32)      
-
-    def save_eps(self, state, action, reward, done, next_state):
-        self.rewards.append(reward)
-        self.states.append(state)
-        self.actions.append(action)
-        self.dones.append(done)
-        self.next_states.append(next_state)       
-
-    def clear_memory(self):
-        del self.actions[:]
-        del self.states[:]
-        del self.rewards[:]
-        del self.dones[:]
-        del self.next_states[:]
 
 class Distributions():
     def sample(self, datas):
