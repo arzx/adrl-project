@@ -12,6 +12,4 @@ Apply this in Jax for faster inference times. There is also a Jax-based Crafter 
 
 ICM from: https://github.com/Stepan-Makarenko/ICM-PPO-implementation/blob/master/ICM.py
 
-[1] Makarenko, S. (2024). ICM-PPO-implementation [Computer software]. GitHub. https://github.com/Stepan-Makarenko/ICM-PPO-implementation
-
-[2] Nugroho, W. (2021). Reinforcement Learning PPO RND [Source code]. GitHub. https://github.com/wisnunugroho21/reinforcement_learning_ppo_rnd
+[1] Nugroho, W. (2021). Reinforcement Learning PPO RND [Source code]. GitHub. https://github.com/wisnunugroho21/reinforcement_learning_ppo_rnd

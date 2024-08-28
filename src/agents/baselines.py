@@ -53,10 +53,12 @@ def train_ppo_agent(env, steps, seed):
             break  # Stop if we've completed enough episodes
 
     # Ensure the directory exists
-    os.makedirs("logdir/crafter_reward-ppo/0", exist_ok=True)
+    # 0 = with 5 seeds
+    # 1 = one seed, longer run
+    os.makedirs("logdir/crafter_reward-ppo/1", exist_ok=True)
     print(f"episodes: {episodes}")
     # Load existing scores from the JSON file, if it exists
-    file_path = "logdir/crafter_reward-ppo/0/scores.json"
+    file_path = "logdir/crafter_reward-ppo/1/scores.json"
     if os.path.exists(file_path):
         with open(file_path, "r") as file:
             try:
@@ -112,31 +114,6 @@ def plot_losses(losses, seed):
     plt.ylim(min(losses) * 0.9, max(losses) * 1.1)
     plt.savefig(f'src/plots/baselines/losses_baselines_{seed}.png')
 
-def plot_rewards(rewards, seed):
-    if not rewards:
-        print("No rewards to plot.")
-        return
-
-    plt.figure(figsize=(10, 5))
-    plt.plot(rewards)
-    plt.xlabel('Training Steps')
-    plt.ylabel('Reward')
-    plt.title(f'Average Rewards during PPO Training (Seed: {seed})')
-    plt.grid(True)
-    plt.savefig(f'src/plots/baselines/rewards_baselines_{seed}.png')
-
-def plot_scores(scores, seed):
-    if not scores:
-        print("No scores to plot.")
-        return
-
-    plt.figure(figsize=(10, 5))
-    plt.plot(scores)
-    plt.xlabel('Episodes')
-    plt.ylabel('Score')
-    plt.title(f'Scores during PPO Training (Seed: {seed})')
-    plt.grid(True)
-    plt.savefig(f'src/plots/baselines/baselines_{seed}.png')
 
 
 def main():
@@ -145,7 +122,7 @@ def main():
     parser.add_argument('--steps', type=float, default=1e6)
     args = parser.parse_args()
 
-    seeds = [42, 111, 101, 292, 300]  # List of seeds
+    seeds = [99]  # List of seeds
 
     for seed in seeds:
         print(f"\nRunning training with seed: {seed}")
@@ -159,7 +136,6 @@ def main():
 
         # Render the environment after training
         render_env(env, model, args.steps)
-
         # Plot the losses, rewards, and scores
         #plot_losses(losses, seed)
         #plot_rewards(rewards, seed)
