@@ -3,7 +3,6 @@ from src.agents.ppo_rnd.ppo_rnd_agent import Agent
 import torch
 import random
 import warnings
-#import matplotlib.pyplot as plt
 import json
 import os
 import numpy as np
@@ -21,19 +20,6 @@ def set_seed(seed):
     torch.manual_seed(seed)
     if torch.cuda.is_available():
         torch.cuda.manual_seed_all(seed)
-
-#def plot(datas):
-    #print('----------')
-
-    #plt.plot(datas)
-    #plt.plot()
-    #plt.xlabel('Episode')
-    #plt.ylabel('Datas')
-    #plt.show()
-
-    #print('Max :', np.max(datas))
-    #print('Min :', np.min(datas))
-    #print('Avg :', np.mean(datas))
 
 def run_inits_episode(env, agent, state_dim, render, n_init_episode):
     ############################################
