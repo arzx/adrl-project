@@ -35,7 +35,7 @@ Success rates: The success rates of the 22 achievemnts are computed as the perce
 | Python Version                       | 3.12.15                      |
 
 ## Further Work
-To reduce the necessary computational resources to reach 1 million episodes, it is recommended to transfer this approach to Craftax [3]. It is implementation of Crafter in Jax
+To reduce the necessary computational resources to reach 1 million episodes, it is recommended to transfer this approach to Craftax [3]. It is an implementation of Crafter in Jax and offers a faster performance. 
 ## Sources
 [1] Nugroho, W. (2021). Reinforcement Learning PPO RND [Source code]. GitHub. https://github.com/wisnunugroho21/reinforcement_learning_ppo_rnd \
 [2] Hafner, D. (2021). Benchmarking the Spectrum of Agent Capabilities. arXiv preprint:2109.06780 \
