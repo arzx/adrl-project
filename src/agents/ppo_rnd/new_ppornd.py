@@ -107,23 +107,22 @@ def main():
     load_weights        = False # If you want to load the agent, set this to True
     save_weights        = False # If you want to save the agent, set this to True
     training_mode       = True # If you want to train the agent, set this to True. But set this otherwise if you only want to test it
-    reward_threshold    = 300 # Set threshold for reward. The learning will stop if reward has pass threshold. Set none to sei this off
+    reward_threshold    = None # Set threshold for reward. The learning will stop if reward has pass threshold. Set none to sei this off
 
     render              = False # If you want to display the image, set this to True. Turn this off if you run this in Google Collab
     n_step_update       = 128 # How many steps before you update the RND. Recommended set to 128 for Discrete
     n_eps_update        = 5 # How many episode before you update the PPO. Recommended set to 5 for Discrete
-    n_plot_batch        = 100000000 # How many episode you want to plot the result
     n_episode           = 400 # change to 1M to reach sota
     n_init_episode      = 1024
     n_saved             = 10 # How many episode to run before saving the weights
 
     policy_kl_range     = 0.0008 # Recommended set to 0.0008 for Discrete
     policy_params       = 20 # Recommended set to 20 for Discrete
-    value_clip          = 1.0 # How many value will be clipped. Recommended set to the highest or lowest possible reward
-    entropy_coef        = 0.05 # How much randomness of action you will get
+    value_clip          = 1.0 # How many values will be clipped. Recommended set to the highest or lowest possible reward
+    entropy_coef        = 0.03 # How much randomness of action you will get
     vf_loss_coef        = 1.0 # Just set to 1
-    minibatch           = 1 # How many batch per update. size of batch = n_update / minibatch. Recommended set to 4 for Discrete
-    PPO_epochs          = 1 # How many epoch per update. Recommended set to 10 for Discrete
+    minibatch           = 4 # How many batch per update. size of batch = n_update / minibatch. Recommended set to 4 for Discrete
+    PPO_epochs          = 10 # How many epoch per update. Recommended set to 10 for Discrete
     
     gamma               = 0.99 # Just set to 0.99
     lam                 = 0.95 # Just set to 0.95
@@ -186,36 +185,9 @@ def main():
                 else:
                     batch_solved_reward.append(total_reward)
 
-            if i_episode % n_plot_batch == 0 and i_episode != 0:
-                # Plot the reward, times for every n_plot_batch
-                plot(batch_rewards)
-                plot(batch_times)
 
-                for reward in batch_rewards:
-                    rewards.append(reward)
+        print('========== Run Finished ==========')
 
-                for time in batch_times:
-                    times.append(time)
-
-                batch_rewards   = []
-                batch_times     = []
-
-                print('========== Cummulative ==========')
-                # Plot the reward, times for every episode
-                plot(rewards)
-                plot(times)
-
-        print('========== Final ==========')
-        # Plot the reward, times for every episode
-
-        for reward in batch_rewards:
-            rewards.append(reward)
-
-        for time in batch_times:
-            times.append(time)
-
-        plot(rewards)
-        plot(times)
 
 if __name__ == '__main__':
     main()
