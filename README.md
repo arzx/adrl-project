@@ -34,6 +34,6 @@ Success rates: The success rates of the 22 achievemnts are computed as the perce
 ## Further Work
 Apply this in Jax for faster inference times. There is also a Jax-based Crafter equivalent which is called Craftax [3].
 ## Sources
-[1] Nugroho, W. (2021). Reinforcement Learning PPO RND [Source code]. GitHub. https://github.com/wisnunugroho21/reinforcement_learning_ppo_rnd
+[1] Nugroho, W. (2021). Reinforcement Learning PPO RND [Source code]. GitHub. https://github.com/wisnunugroho21/reinforcement_learning_ppo_rnd \n
 [2] Hafner, D. (2021). Benchmarking the Spectrum of Agent Capabilities. arXiv preprint:2109.06780
 [3] Matthews, M. et al. (2024). Craftax: A Lightning-Fast Benchmark for Open-End Reinforcement Learning. International Conference on Machine Learning (ICML)
