@@ -29,7 +29,7 @@ Success rates: The success rates of the 22 achievemnts are computed as the perce
 | TPU                                  | -                                    |
 | RAM                                  | 18 GB RAM                       |
 | OS                                   | Sonoma 14.5                        |
-| Python Version                       | 3.10.14                               |
+| Python Version                       | 3.12.15                      |
 
 ## Further Work
 Apply this in Jax for faster inference times. There is also a Jax-based Crafter equivalent which is called Craftax [3].
