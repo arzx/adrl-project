@@ -2,7 +2,9 @@
 This project aims to combine the exploration strategy offered by Random Network Distillation (RND) with the robustness of Proximal Policy Optimization (PPO). As previous attempts improved smaller state-space environments, this project is thought to solve the milestones from Crafter environment which is a 2D abstraction of Minecraft. The main challenge in this project is the utilization of intrinsic rewards while the base environment has incorporated milestones which are essential for the reward function and solving the environment. 
 
 ## Results
+First plot is vanilla PPO on 400 episodes
 ![alt text](https://github.com/arzx/adrl-project/blob/main/src/plots/baselines/median.png)
+Second plot is PPO with RND
 ![alt text](https://github.com/arzx/adrl-project/blob/main/src/plots/ppornd/median-ppornd-400.png)
 ## Installation
 ### (Recommended) Setup new clean environment
