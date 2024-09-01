@@ -3,6 +3,7 @@ This project aims to combine the exploration strategy offered by Random Network 
 
 ## Results
 ![alt text](https://github.com/arzx/adrl-project/blob/main/src/plots/baselines/median.png)
+![alt text](https://github.com/arzx/adrl-project/blob/main/src/plots/ppornd/median-ppornd-400.png)
 ## Installation
 ### (Recommended) Setup new clean environment
 Use a conda package manager.
