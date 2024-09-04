@@ -52,7 +52,7 @@ def pad_scores(scores_dict):
     return np.array(padded_scores)
 
 # Function to plot scores from the dictionary without the median
-def plot_scores_without_median(scores_dict, save_dir='src/plots/solo_runs', x_tick_interval=50):
+def plot_scores_without_median(scores_dict, save_dir='src/plots/ppornd', x_tick_interval=50):
     """
     Plot the scores over episodes for each seed and save the plot.
     """
@@ -89,7 +89,7 @@ def plot_scores_without_median(scores_dict, save_dir='src/plots/solo_runs', x_ti
     plt.savefig(os.path.join(save_dir, 'scores_baselines.png'))
     plt.close()
 
-def plot_mean_and_ci(scores_dict, save_dir='src/plots/solo_runs', x_tick_interval=50):
+def plot_mean_and_ci(scores_dict, save_dir='src/plots/ppornd', x_tick_interval=50):
     """
     Plot the mean scores with confidence intervals over episodes for multiple seeds.
     """
@@ -147,7 +147,7 @@ def save_json_file(data, file_path):
         json.dump(data, file, indent=4)
         print(f"Data successfully saved to {file_path}")
 
-def plot_value_frequencies_heatmap(values, save_dir='src/plots/solo_runs', decimal_places=2):
+def plot_value_frequencies_heatmap(values, save_dir='src/plots/ppornd', decimal_places=2):
     """
     Plot a heatmap of the frequency of each truncated value.
     """
@@ -184,7 +184,7 @@ def plot_value_frequencies_heatmap(values, save_dir='src/plots/solo_runs', decim
 
 def main():
     # Path to your JSON file with scores
-    json_file_path = "logdir/crafter_reward-ppo/1/scores.json"
+    json_file_path = "logdir/ppo-rnd/0/scores_ppornd.json"
 
     # Load the JSON data
     data = load_json_file(json_file_path)
