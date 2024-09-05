@@ -8,10 +8,11 @@ from torch.distributions.kl import kl_divergence
 from torch.utils.data import Dataset, DataLoader
 from torch.optim import Adam
 import warnings
-
+import logging 
 import matplotlib.pyplot as plt
 import numpy as np
 
+logging.basicConfig(filename='policies.log', level=logging.INFO, format='%(message)s')
 warnings.filterwarnings("ignore", category=UserWarning, message="resource_tracker: There appear to be .* leaked semaphore objects")
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")  
 dataType = torch.cuda.FloatTensor if torch.cuda.is_available() else torch.FloatTensor
@@ -370,23 +371,27 @@ class Agent():
     
 
     def act(self, state):
-        state           = torch.FloatTensor(state).unsqueeze(0).to(device).detach()
+        state = torch.FloatTensor(state).unsqueeze(0).to(device).detach()
         logits = self.actor(state)
         logits = logits - logits.max(dim=-1, keepdim=True)[0]
         logits = torch.clamp(logits, min=-100, max=100)
-        #normalized_logits = get_normalized_logits(logits)
         action_probs = torch.softmax(logits, dim=-1)
-        # clamping probs to disable negative and near zero probs
+        
+        # Clamp probabilities
         action_probs = torch.clamp(action_probs, min=1e-8)
         action_probs = action_probs / action_probs.sum(dim=-1, keepdim=True)
-        # only sampling the action in Training Mode in order to exploring the actions
-        if self.is_training_mode:
-            action  = self.distributions.sample(action_probs) 
-        else:
-            action  = torch.argmax(action_probs, 1)  
-        print(f"Selected action: {action.cpu().item()}")
-        return action.cpu().item()
 
+        # Log the action probabilities
+        logging.info(f"State: {state.cpu().numpy()}, Action Probabilities: {action_probs.detach().numpy()}")
+        #print(action_probs)
+        if self.is_training_mode:
+            action = self.distributions.sample(action_probs) 
+        else:
+            action = torch.argmax(action_probs, 1)  
+
+        #print(f"Selected action: {action.cpu().item()}")
+        return action.cpu().item()
+    
     def compute_intrinsic_reward(self, obs, mean_obs, std_obs):
         obs             = self.utils.normalize(obs, mean_obs, std_obs)
         
@@ -543,7 +548,7 @@ def run_episode(env, agent, state_dim, render, training_mode, t_updates, n_updat
     while not done:
         action                      = int(agent.act(state))
         next_state, reward, done, _ = env.step(action)
-        print(f"Action: {action}, Reward: {reward}") 
+        #print(f"Action: {action}, Reward: {reward}") 
         eps_time        += 1 
         t_updates       += 1
         total_reward    += reward
@@ -573,17 +578,19 @@ def run_episode(env, agent, state_dim, render, training_mode, t_updates, n_updat
             return total_reward, eps_time, t_updates           
 
 def main():
+    logging.basicConfig(filename='policies.log', level=logging.INFO, format='%(message)s')
+
     ############## Hyperparameters ##############
     load_weights        = False # If you want to load the agent, set this to True
     save_weights        = False # If you want to save the agent, set this to True
     training_mode       = True # If you want to train the agent, set this to True. But set this otherwise if you only want to test it
     reward_threshold    = 300 # Set threshold for reward. The learning will stop if reward has pass threshold. Set none to sei this off
 
-    render              = False # If you want to display the image, set this to True. Turn this off if you run this in Google Collab
+    render              = True # If you want to display the image, set this to True. Turn this off if you run this in Google Collab
     n_step_update       = 128 # How many steps before you update the RND. Recommended set to 128 for Discrete
     n_eps_update        = 5 # How many episode before you update the PPO. Recommended set to 5 for Discrete
     n_plot_batch        = 100000000 # How many episode you want to plot the result
-    n_episode           = 1000000 # change to 1M
+    n_episode           = 10 # change to 1M
     n_init_episode      = 1024
     n_saved             = 10 # How many episode to run before saving the weights
 
@@ -685,6 +692,5 @@ def main():
 
     plot(rewards)
     plot(times)
-
 if __name__ == '__main__':
     main()
