@@ -137,7 +137,7 @@ def main():
     parser.add_argument('--steps', type=float, default=1e6)
     args = parser.parse_args()
 
-    seeds = [99]  # List of seeds
+    seeds = [99, 101, 200, 301, 400]  # List of seeds
 
     for seed in seeds:
         setup_logger(seed) 
