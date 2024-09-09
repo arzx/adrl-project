@@ -1,4 +1,0 @@
-- change parameters in ppornd to parser arguments
-- ppo_rnd auf cluster laufen lassen
-- von cluster ergebnisse auf gh pushen
-- README fertig machen

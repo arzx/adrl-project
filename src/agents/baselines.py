@@ -1,4 +1,3 @@
-import argparse
 import json
 import random
 import os
@@ -22,6 +21,9 @@ def set_seed(seed):
         torch.cuda.manual_seed_all(seed)
 
 def setup_logger(seed):
+    """
+    Setup logger for monitoring.
+    """
     log_filename = f'logdir/crafter_reward-ppo/training_log_seed_{seed}.log'
     logging.basicConfig(
         filename=log_filename,
@@ -66,8 +68,6 @@ def train_ppo_agent(env, steps, seed):
             # Save action probabilities for each step
             action_probs_log.append(action_probabilities.tolist())
             
-            print(f"Action Probabilities: {action_probabilities}")  # Print the action probabilities
-            
             # Step the environment
             obs, reward, done, info = env.step(action)
             cumulative_score += reward
@@ -76,7 +76,6 @@ def train_ppo_agent(env, steps, seed):
                 print(scores)
                 cumulative_score = 0  # Reset score after each episode
                 obs = env.reset()
-                print("Observation shape after reset:", obs.shape)  # Debugging shape
                 episodes += 1
 
         if episodes >= steps:
@@ -132,11 +131,7 @@ def render_env(env, model, steps):
     env.close()
 
 def main():
-    # Argument parser to handle command line arguments
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--steps', type=float, default=1e6)
-    args = parser.parse_args()
-
+    steps = 500  # Set steps directly here
     seeds = [99, 101, 200, 301, 400]  # List of seeds
 
     for seed in seeds:
@@ -148,10 +143,10 @@ def main():
         env = create_env()
 
         # Train the PPO agent
-        model, losses, rewards, scores = train_ppo_agent(env, args.steps, seed)
+        model, losses, rewards, scores = train_ppo_agent(env, steps, seed)
 
         # Render the environment after training
-        render_env(env, model, args.steps)
+        render_env(env, model, steps)
 
 if __name__ == "__main__":
     main()

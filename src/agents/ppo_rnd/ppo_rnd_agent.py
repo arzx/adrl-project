@@ -180,7 +180,6 @@ class Agent():
             action  = self.distributions.sample(action_probs) 
         else:
             action  = torch.argmax(action_probs, 1)  
-        print(f"Selected action: {action.cpu().item()}")
         return action.cpu().item()
 
     def compute_intrinsic_reward(self, obs, mean_obs, std_obs):
