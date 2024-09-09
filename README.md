@@ -3,9 +3,9 @@ This project aims to combine the exploration strategy offered by Random Network 
 
 ## Results
 First plot is vanilla PPO on 400 episodes
-![alt text](https://github.com/arzx/adrl-project/blob/main/src/plots/baselines/median.png)
+![alt text](https://github.com/arzx/adrl-project/blob/main/src/plots/baselines_final/mean_scores_with_std_dev.png)
 Second plot is PPO with RND
-![alt text](https://github.com/arzx/adrl-project/blob/main/src/plots/ppornd/median-ppornd-400.png)
+![alt text](https://github.com/arzx/adrl-project/blob/main/src/plots/ppo_rnd_final/mean_scores_with_std_dev.png)
 ## Installation
 ### (Recommended) Setup new clean environment
 Use a conda package manager.
