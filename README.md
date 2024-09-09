@@ -19,17 +19,17 @@ pip install -r requirements.txt
 ```
 
 ## How to run
-export PYTHONPATH=$(pwd)/src:$PYTHONPATH
+`export PYTHONPATH=$(pwd)/src:$PYTHONPATH`
 #### baselines ppo
-python src/agents/baselines.py --steps 500
+`python src/agents/baselines.py --steps 500`
 
 
 #### To run without seeds and log the policies for comparison
-src/agents/ppo_rnd/with_policies.py --steps 500
+`src/agents/ppo_rnd/with_policies.py --steps 500`
 
 
 #### ppo_rnd version with seeds
-python src/agents/ppo_rnd/new_ppornd.py --steps 500
+`python src/agents/ppo_rnd/new_ppornd.py --steps 500`
 
 #### plotting 
 The plot `scores_baselines.png` show each seeds trajectory to inspect robustness and correct episode length. The plot `mean_scores_with_std_dev.png` shows the mean achievement over 500 episodes with the respective confidence interval across all seeds.
